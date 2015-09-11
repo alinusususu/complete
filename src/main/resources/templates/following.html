@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:social="http://spring.io/springsocial"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorator="layout">
+	<head>
+		<title>Twitter</title>
+		<link rel="stylesheet" th:href="@{css/page.css}" type="text/css" media="screen"></link>
+		<link rel="stylesheet" th:href="@{css/form.css}" type="text/css" media="screen"></link>
+		<link rel="stylesheet" th:href="@{css/messages.css}" type="text/css" media="screen"></link>
+	</head>
+	<body>
+		<div id="content" layout:fragment="content">
+			<h3>Your Twitter Friends</h3>
+			
+			<ul class="imagedList">
+				<li class="imagedItem" th:each="profile : ${profiles}">
+					<div class="image" th:if="${!#strings.isEmpty(profile.profileImageUrl)}">
+					<img th:src="${profile.profileImageUrl}" width="48" height="48" align="left"/>
+					</div>
+					<div class="content">
+					<p><a th:href="@{/timeline} + '?screenName=' + ${profile.screenName}" th:text="${profile.screenName}">screen name</a></p>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</body>
+</html>

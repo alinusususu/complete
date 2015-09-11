@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:social="http://spring.io/springsocial"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	
+	<body>
+		<div id="header">
+			<h1><a th:href="@{/}">Twitter</a></h1>
+		</div>
+		
+		<div id="leftNav">
+			<ul class="menu">
+				<li><a th:href="@{/}">Home</a></li>
+				<li><a th:href="@{/myTweets}">My Tweets</a></li>
+				<li><a th:href="@{/followers}">Followers</a></li>
+				<li><a th:href="@{/following}">Following</a></li>
+				<li><a th:href="@{/messages}">Messages</a></li>
+				<li><a th:href="@{/profile}">Profile</a></li>
+			</ul>
+		</div>
+		<div id="search">
+			<form th:action="@{/search}" method="get">
+					<p><input type="text" name="query" th:value="${param.query}" /> <input type="submit" value="Search"/></p>
+			</form>
+		</div>
+		
+		<div id="content" layout:fragment="content">
+			Content goes here
+		</div>	
+			
+	</body>
+</html>
