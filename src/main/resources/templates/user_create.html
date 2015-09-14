@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:social="http://spring.io/springsocial"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<head>
+<title>Twitter</title>
+<link rel="stylesheet" th:href="@{css/page.css}" type="text/css"
+	media="screen"></link>
+<link rel="stylesheet" th:href="@{css/form.css}" type="text/css"
+	media="screen"></link>
+<link rel="stylesheet" th:href="@{css/messages.css}" type="text/css"
+	media="screen"></link>
+</head>
+<body>
+	<div id="content" layout:fragment="content">
+		<form role="form" name="form" th:action="@{/create}" method="post">
+			
+			<div>
+				<label for="email">Email address</label> <input type="email"
+					name="email" id="email"  />
+			</div>
+			<div>
+				<label for="username">Username</label> <input type="text"
+					name="username" id="username"  />
+			</div>
+			<div>
+				<label for="password">Password</label> <input type="password"
+					name="password" id="password" />
+			</div>
+			<button type="submit">Save</button>
+		</form>
+		<form th:action="@{/login}" method="post">
+           		 <input type="submit" value="Back"/>
+      	</form>
+	</div>
+</body>
+</html>

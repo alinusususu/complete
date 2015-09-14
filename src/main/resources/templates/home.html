@@ -9,16 +9,11 @@
 		<link rel="stylesheet" th:href="@{css/form.css}" type="text/css" media="screen"></link>
 		<link rel="stylesheet" th:href="@{css/messages.css}" type="text/css" media="screen"></link>
 	</head>
-	<body>
-	<div id="content" layout:fragment="content">
-		<h3>Send a message</h3>
-		
-		<form th:action="@{/messages}" method="post">
-				<p>Send a message:</p>
-				<label>To: </label><input type="text" name="to"/><br/>
-				<textarea name="text" rows="2" cols="80"></textarea><br/>
-				<input type="submit" value="Send Message"/>
-			</form>
-	</div>
-	</body>
+    <body>
+   		 <div id="content" layout:fragment="content">
+	        <h3>Welcome!</h3>
+	        
+	        <p>Click <a th:href="@{/timeline}">here</a> to see a timeline.</p>
+        </div>
+    </body>
 </html>

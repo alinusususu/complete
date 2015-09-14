@@ -10,29 +10,33 @@
 		<link rel="stylesheet" th:href="@{css/messages.css}" type="text/css" media="screen"></link>
 	</head>
 	<body>
-		<div id="header">
-			<h1><a th:href="@{/}">Twitter profile</a></h1>
-		</div>
-		
-	
 		<div id="content" layout:fragment="content">
-			<h3>Your Twitter Profile</h3>
+			<div id="search">
+				<form th:action="@{/search}" method="get">
+						<p><input type="text" name="query" /> <input type="submit" value="Search"/></p>
+				</form>
+			</div>
+			 <div th:if="${followed==false}">
+			 	<strong><a th:text="${user.username}">from user</a></strong>
+	            <strong><a th:href="@{/follow} + '?username=' + ${user.username}" > follow </a></strong><br/>
+	        </div>
+	        
+	         <div th:if="${followed==true}">
+	            <strong><a th:text="${user.username}">from user</a></strong>
+	            <strong><a th:href="@{/unfollow} + '?username=' + ${user.username}" > unfollow </a></strong><br/>
+	        </div>
 			
-			<p>Hello, <span th:text="${profile.name}">name</span>!</p>
-			<img th:src="${profile.profileImageUrl}"/>
-			<dl>
-				<dt>Twitter ID:</dt>
-				<dd th:text="${profile.id}">profile id</dd>
-				<dt>Screen name:</dt>
-				<dd><a th:href="${profile.profileUrl}" target="_blank" th:text="${profile.screenName}">screen name</a></dd>
-				<dt>Description:</dt>
-				<dd th:text="${profile.description}">description</dd>
-				<dt>Location:</dt>
-				<dd th:text="${profile.location}">location</dd>
-				<dt>URL:</dt>
-				<dd><a th:href="${profile.url}" th:text="${profile.url}">profile url</a></dd>
-			</dl>
+			<div class="feed">
+			<ul class="imagedList">
+				<li class="imagedItem" th:each="tweet : ${tweets}">
+					<div class="content">
+					<strong><a th:href="@{/for} + '?username=' + ${tweet.user.username}" th:text="${tweet.user.username}">from user</a></strong><br/>
+					<span th:text="${tweet.text}">tweet text</span><br/>
+					<span class="postTime" th:text="${tweet.createdAt}">created at</span>
+					</div>
+				</li>
+			</ul>
+			</div> 
 		</div>
 	</body>
 </html>
-

@@ -1,67 +1,69 @@
 package twitter.controller;
 
-import javax.inject.Inject;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.social.connect.ConnectionRepository;
-import org.springframework.social.twitter.api.CursoredList;
-import org.springframework.social.twitter.api.Twitter;
-import org.springframework.social.twitter.api.TwitterProfile;
-import org.springframework.social.twitter.api.impl.TwitterTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import twitter.model.TwitterTemplateGenerator;
+import twitter.model.CurrentUser;
+import twitter.model.Tweet;
+import twitter.service.TweetService;
+import twitter.service.UserService;
+
 
 @Controller
 public class TimelineController {
-
 	@Autowired
-	private TwitterTemplateGenerator twitterTemplateGenerator;
-
-	private Twitter twitter;
-
-	private ConnectionRepository connectionRepository;
-
-	@Inject
-	public TimelineController(Twitter twitter, ConnectionRepository connectionRepository) {
-		this.twitter = twitter;
-		this.connectionRepository = connectionRepository;
-	}
-
+	private TweetService tweetService;
+	
+	@Autowired
+	private UserService userService;
+	
 	@RequestMapping("/")
 	public String home(Model model) {
-		/*
-		 * if (connectionRepository.findPrimaryConnection(Twitter.class) ==
-		 * null) { return "redirect:/connect/twitter"; }
-		 */
-		twitter = twitterTemplateGenerator.getTwitterTemplate();
-		model.addAttribute("timeline", twitter.timelineOperations().getHomeTimeline());
-		return "timeline";
+		return "redirect:/timeline";
 	}
 
-	@RequestMapping("/myTweets")
-	public String myTweets(Model model) {
-		twitter = twitterTemplateGenerator.getTwitterTemplate();
-		model.addAttribute("timeline", twitter.timelineOperations().getUserTimeline());
+	@RequestMapping(value="/tweet", method=RequestMethod.POST)
+	public String postTweet(String text) {
+		Tweet tweet = new Tweet();
+		tweet.setText(text);
+		tweetService.create(tweet);
+		return "redirect:/timeline";
+	}
+	
+	
+	
+	@RequestMapping(value="/myTweets", method=RequestMethod.GET)
+	public String timelineFor(Model model) {
+		model.addAttribute("timeline", tweetService.getCurrentUserTweets());
 		return "timeline";
 	}
 	
+	@RequestMapping(value="/for", method=RequestMethod.GET)
+	public String timelineFor(@RequestParam("username") String username,Model model) {
+		model.addAttribute("followed", userService.isFollowing(username));
+		model.addAttribute("user", userService.findUserByUsername(username));
+		model.addAttribute("tweets", tweetService.getUserTweets(username));
+		return "profile";
+	}
+	
+	@RequestMapping(value="/test", method=RequestMethod.GET)
+	public String test(Model model) {
+		CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		model.addAttribute("user", currentUser);
+		return "test";
+	}
 	@RequestMapping(value="/timeline", method=RequestMethod.GET)
-	public String timelineFor(@RequestParam("screenName") String screenName,Model model) {
-		twitter = twitterTemplateGenerator.getTwitterTemplate();
-		model.addAttribute("timeline", twitter.timelineOperations().getUserTimeline(screenName));
+	public String timeline(Model model) {
+		model.addAttribute("timeline", tweetService.getAllTweets());
 		return "timeline";
 	}
-	@RequestMapping(value="/tweet", method=RequestMethod.POST)
-	public String postTweet(String message) {
-		twitter = twitterTemplateGenerator.getTwitterTemplate();
-		twitter.timelineOperations().updateStatus(message);
-		return "redirect:/";
-	}
+	
 
 }

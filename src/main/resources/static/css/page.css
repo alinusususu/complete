@@ -25,9 +25,9 @@ body {
 	background-color: #00a9e7;
 }
 
-#search  {
+#search input {
 	
-	margin-left: 170px;
+	margin-top: 3px;
 }
 #content {
 	margin-left: 170px;
